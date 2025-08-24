@@ -25,8 +25,8 @@ def api_sqlite():
         return adicionar_pokemon()
 
     t1 = task_gerar_numero_aleatorio()
-    t2 = task_pegar_pokemon(1)
-    t3 = task_adicionar_pokemon(2)
+    t2 = task_pegar_pokemon(t1)
+    t3 = task_adicionar_pokemon(t2)
 
     t1 >> t2 >> t3
 
