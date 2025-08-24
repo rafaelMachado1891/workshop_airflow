@@ -1,7 +1,7 @@
 import requests
 from include.db import Sessionlocal, engine, Base
-from .models import pokemon
-from .schema import pokemonschema
+from include.models import pokemon
+from include.schema import pokemonschema
 from random import randint
 
 Base.metadata.create_all(bind=engine)
