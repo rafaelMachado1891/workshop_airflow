@@ -9,16 +9,16 @@ Base.metadata.create_all(bind=engine)
 def gerar_numero_aleatorio():
     return randint(1,350)
 
-def pegar_pokemon(id: int):   
+def pegar_pokemon(id: int)-> dict:   
     response = requests.get(f'https://pokeapi.co/api/v2/pokemon/{id}')
     data = response.json()
-    types = ', '.join(type['type']['name'] for type in data['types'])
-    return pokemonschema(name=data['name'], type=types)
+    types = ', '.join(t['type']['name'] for t in data['types'])
+    return {"name": data["name"], "type": types}
 
-def adicionar_pokemon(pokemon_schema: pokemonschema) -> Pokemon:
+def adicionar_pokemon(pokemon_dict: dict) -> int:
     with Sessionlocal() as db:
-        db_pokemon = Pokemon(name=pokemon_schema['name'], type=pokemon_schema.type)
+        db_pokemon = Pokemon(name=pokemon_dict["name"], type=pokemon_dict["type"])
         db.add(db_pokemon)
         db.commit()
         db.refresh(db_pokemon)
-    return db_pokemon
+    return db_pokemon.id
