@@ -1,6 +1,6 @@
 import requests
 from include.db import Sessionlocal, engine, Base
-from include.models import pokemon
+from include.models import Pokemon
 from include.schema import pokemonschema
 from random import randint
 
@@ -9,19 +9,15 @@ Base.metadata.create_all(bind=engine)
 def gerar_numero_aleatorio():
     return randint(1,350)
 
-def pegar_pokemon(id: int) -> pokemonschema:   
+def pegar_pokemon(id: int):   
     response = requests.get(f'https://pokeapi.co/api/v2/pokemon/{id}')
     data = response.json()
-    data_types = data['types']
-    types_list = []
-    for type_info in data_types:
-        types_list.append(type_info['type']['name'])
-    types = ', '.join(types_list)
-    return pokemonschema(name=data['name'],type=types)
+    types = ', '.join(type['type']['name'] for type in data['types'])
+    return pokemonschema(name=data['name'], type=types)
 
-def adicionar_pokemon(pokemon_schema: pokemonschema) -> pokemon:
+def adicionar_pokemon(pokemon_schema: pokemonschema) -> Pokemon:
     with Sessionlocal() as db:
-        db_pokemon = pokemon(name=pokemon_schema.name, type=pokemon_schema.type)
+        db_pokemon = Pokemon(name=pokemon_schema['name'], type=pokemon_schema.type)
         db.add(db_pokemon)
         db.commit()
         db.refresh(db_pokemon)

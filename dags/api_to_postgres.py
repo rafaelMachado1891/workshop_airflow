@@ -10,7 +10,7 @@ from datetime import datetime
     schedule="* * * * *",
     catchup=False
 )
-def api_sqlite():
+def api_postgres():
 
     @task(task_id="gerar_numero_aleatorio")
     def task_gerar_numero_aleatorio():
@@ -32,4 +32,4 @@ def api_sqlite():
     t1 >> t2 >> t3
 
 
-api_sqlite()
+api_postgres()
